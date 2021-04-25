@@ -313,8 +313,10 @@ spec:
           ports:
             - containerPort: {{ .Values.mastodon_web.service.port1  | default "3000" }}
               protocol: TCP
+              name: tcp-3000
             - containerPort: {{ .Values.mastodon_web.service.port2  | default "4000" }}
               protocol: TCP
+              name: tcp-4000
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 5

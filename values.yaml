@@ -1,6 +1,7 @@
 appName: &name mastodon
 
-route: true
+route:
+  enabled: true
 
 postgresql:
   accessmode: ReadWriteOnce
