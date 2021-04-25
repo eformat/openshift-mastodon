@@ -1,0 +1,67 @@
+# Generation of Kubernetes YAML is still under development!
+#
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-3.0.1
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2021-04-25T00:47:24Z"
+  labels:
+    app: local-miniominio1
+  name: local-miniominio1
+spec:
+  containers:
+  - args:
+    - server
+    - /data
+    command:
+    - /usr/bin/docker-entrypoint.sh
+    env:
+    - name: PATH
+      value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    - name: TERM
+      value: xterm
+    - name: container
+      value: podman
+    - name: MINIO_KMS_MASTER_KEY_FILE
+      value: kms_master_key
+    - name: MINIO_SSE_MASTER_KEY_FILE
+      value: sse_master_key
+    - name: TZ
+      value: Australia/Sydney
+    - name: MINIO_UPDATE
+      value: "off"
+    - name: MINIO_ACCESS_KEY_FILE
+      value: access_key
+    - name: MINIO_SECRET_KEY_FILE
+      value: secret_key
+    - name: HOSTNAME
+      value: minio
+    image: quay.io/eformat/mlminio:latest
+    name: local-miniominio1
+    resources: {}
+    securityContext:
+      allowPrivilegeEscalation: true
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+      privileged: false
+      readOnlyRootFilesystem: false
+      seLinuxOptions: {}
+    volumeMounts:
+    - mountPath: /data
+      name: home-mike-git-mastodon-minio-data
+    workingDir: /
+  dnsConfig: {}
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /home/mike/git/mastodon/minio-data
+      type: Directory
+    name: home-mike-git-mastodon-minio-data
+status: {}
+

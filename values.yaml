@@ -1,0 +1,55 @@
+appName: &name mastodon
+
+route: true
+
+postgresql:
+  accessmode: ReadWriteOnce
+  service:
+    port: 5432
+    database: *name
+    type: ClusterIP
+  image:
+    tag: "9.6-el8"
+
+  storageClass:
+  accessMode: ReadWriteOnce
+  size: 5Gi
+
+  postgresqlUsername: "mastodon"
+  postgresqlPassword: "password"
+  postgresqlDatabase: "mastodon"
+
+redis:
+  image: docker.io/redis:6.0.12
+  healthimage: docker.io/healthcheck/redis:latest
+  pullPolicy: Always
+  accessMode: ReadWriteOnce
+  volume:
+    size: 1Gi
+  service:
+    type: ClusterIP
+    port: 6379
+
+minio:
+  image: docker.io/minio/minio:latest
+  persistence:
+    accessModes: ReadWriteOnce
+    volumeSize: 5Gi
+
+mastodon:
+  image: docker.io/tootsuite/mastodon:latest
+  s3_bucket: mastodon
+  s3_protocol: https
+  s3_enabled: "true"
+  aws_access_key_id: minioadmin
+  aws_secret_access_key: minioadmin
+  local_domain: mastodon.apps.hivec.sandbox879.opentlc.com
+  vapid_public_key: BDJOQqRj-sORfK_9gsDZrtQQjNV45UbQ5KYw0BcLXIwp1pimyXKSqH5yYAqDqbALJXp4QoJbE-QPrpq99z15k-I=
+  secret_key_base: =b4b3f46e7ea91922b05c2352b6b17e32f87611b85c1ba65d1219d44a1bbb172dbd416c35bfd32a83ae19f11d2f2c38689af7e2493d018aa939459ccd3c449d93
+  vapid_private_key: Hyxd4kmRTD4D8dkDEh34_DanHjzd1ya6aHjNK4KsPww=
+  otp_secret: c1bbee5bdff1c3dbbf96d68d71c0b95f4ed76947cf1d4caf42d7053c3c062c77686d17c2a7119674c3f15a15586bd72dcb9fd3941bd4bf44f74acdbb381ed320
+
+mastodon_web:
+  service:
+    port1: 3000
+    port2: 4000
