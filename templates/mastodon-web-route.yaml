@@ -7,8 +7,9 @@ metadata:
   labels:
     {{- include "mastodon-web.labels" . | nindent 4 }}
 spec:
+  host: {{ .Values.mastodon.local_domain }}
   port:
-    targetPort: tcp-8080
+    targetPort: mastodon-web
   to:
     kind: Service
     name: {{ include "mastodon-web.fullname" . }}
