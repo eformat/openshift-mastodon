@@ -1,0 +1,182 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- include "mastodon-sidekiq.labels" . | nindent 4 }}
+  name: {{ include "mastodon-sidekiq.fullname" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "mastodon-sidekiq.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "mastodon-sidekiq.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - args:
+            - bundle
+            - exec
+            - sidekiq
+          command:
+            - /tini
+            - --
+          name: mastodonstreaming
+          env:
+            - name: S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "s3_bucket" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "s3_endpoint" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: S3_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "s3_hostname" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: S3_PROTOCOL
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "s3_protocol" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: S3_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "s3_enabled" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: S3_PROTOCOL
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "s3_protocol" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "aws_access_key_id" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "redis_host" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: REDIS_PORT
+              value: {{ .Values.redis.service.port | quote }}
+            - name: ES_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "es_enabled" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: ES_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "es_host" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: ES_PORT
+              value: "9200"
+            - name: LOCAL_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "local_domain" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "db_host" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "db_pass" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "db_user" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "db_name" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: DB_PORT
+              value: {{ .Values.postgresql.service.port | quote }}
+            - name: BIND
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "bind" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "smtp_password" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: SMTP_FROM_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "smtp_from_address" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: SMTP_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "smtp_login" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: SMTP_SERVER
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "smtp_server" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: SMTP_PORT
+              value: "587"
+            - name: VAPID_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "vapid_public_key" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "secret_key_base" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: VAPID_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "vapid_private_key" }}
+                  name: {{ include "mastodon.name" . }}
+            - name: OTP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "otp_secret" }}
+                  name: {{ include "mastodon.name" . }}
+          image: {{ .Values.mastodon.image | quote }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.mastodon_web.service.port1  | default "3000" }}
+              protocol: TCP
+            - containerPort: {{ .Values.mastodon_web.service.port2  | default "4000" }}
+              protocol: TCP
+          securityContext:
+            capabilities: {}
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          volumeMounts:
+            - mountPath: /opt/mastodon/tmp/
+              name: mastodontemp
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: mastodontemp
+          emptyDir: {}

@@ -10,6 +10,14 @@ Expand the name of the chart.
 {{- printf "mastodon-web-%s" .Values.appName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "mastodon-streaming.name" -}}
+{{- printf "mastodon-streaming-%s" .Values.appName | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "mastodon-sidekiq.name" -}}
+{{- printf "mastodon-sidekiq-%s" .Values.appName | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "postgresql.name" -}}
 {{- printf "postgresql-%s" .Values.appName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -42,6 +50,14 @@ If release name contains chart name it will be used as a full name.
 
 {{- define "mastodon-web.fullname" -}}
 {{- printf "mastodon-web-%s-%s" .Release.Name .Values.appName | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "mastodon-streaming.fullname" -}}
+{{- printf "mastodon-streaming-%s-%s" .Release.Name .Values.appName | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "mastodon-sidekiq.fullname" -}}
+{{- printf "mastodon-sidekiq-%s-%s" .Release.Name .Values.appName | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "postgresql.fullname" -}}
@@ -95,6 +111,24 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
+{{- define "mastodon-streaming.labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon-streaming.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
+{{- define "mastodon-sidekiq.labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon-sidekiq.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end -}}
+
 {{- define "postgresql.labels" -}}
 helm.sh/chart: {{ include "mastodon.chart" . }}
 {{ include "postgresql.selectorLabels" . }}
@@ -137,6 +171,16 @@ app.kubernetes.io/name: {{ include "mastodon-web.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
+{{- define "mastodon-streaming.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon-streaming.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
+{{- define "mastodon-sidekiq.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon-sidekiq.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
 {{- define "postgresql.hostname" -}}
 {{- if .Values.postgresql.enabled -}}
 {{- printf "%s-%s" "postgresql" .Values.appName | trunc 63 | trimSuffix "-" -}}
@@ -163,6 +207,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Other
 */}}
-{{- define "mastodon-web.s3_endpoint" -}}
+{{- define "mastodon.s3_endpoint" -}}
 {{- printf "http://%s:9000/" (include "minio.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
