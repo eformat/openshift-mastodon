@@ -8,7 +8,9 @@ helm upgrade --install my-mastodon .
 ```
 ### Generate Secrets for your mastodon
 
-The default values were created as follows, you should update and keep these secret:
+Prior to deploying, you should update and keep these secret.
+
+The default values were created as follows:
 
 ```bash
 -- generate a SECRET_KEY_BASE
