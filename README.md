@@ -4,8 +4,14 @@
 
 Deploy a mastodon instance in OpenShift
 ```bash
-helm upgrade --install my-mastodon .
+helm upgrade --install foo .
 ```
+
+A more detailed install example might be:
+```bash
+helm upgrade --install foo --set mastodon.smtp_server=smtp.mailgun.org --set mastodon.smtp_login=postmaster@example.com --set mastodon.smtp_password=123456 --set mastodon.smtp_from_address=mastodon@example.com. .
+```
+
 ### Generate Secrets for your mastodon
 
 Prior to deploying, you should update and keep these secret.

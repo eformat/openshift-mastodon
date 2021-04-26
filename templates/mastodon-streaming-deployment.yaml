@@ -141,7 +141,7 @@ spec:
                   key: {{ default "smtp_server" }}
                   name: {{ include "mastodon.name" . }}
             - name: SMTP_PORT
-              value: "587"
+              value: {{ .Values.mastodon.smtp_port | quote }}
             - name: VAPID_PUBLIC_KEY
               valueFrom:
                 secretKeyRef:
