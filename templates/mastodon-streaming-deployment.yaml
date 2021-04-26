@@ -59,6 +59,11 @@ spec:
                 secretKeyRef:
                   key: {{ default "s3_protocol" }}
                   name: {{ include "mastodon.name" . }}
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: {{ default "aws_secret_access_key" }}
+                  name: {{ include "mastodon.name" . }}
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -170,8 +175,10 @@ spec:
           ports:
             - containerPort: {{ .Values.mastodon_web.service.port1  | default "3000" }}
               protocol: TCP
+              name: tcp-3000
             - containerPort: {{ .Values.mastodon_web.service.port2  | default "4000" }}
               protocol: TCP
+              name: tcp-4000
           readinessProbe:
             failureThreshold: 3
             initialDelaySeconds: 5

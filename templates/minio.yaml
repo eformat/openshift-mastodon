@@ -110,8 +110,8 @@ metadata:
   annotations:
     openshift.io/host.generated: 'true'
 spec:
-  host: null
-  subdomain: ''
+  host: {{ .Values.mastodon.local_domain }}
+  path: /mastodon
   to:
     kind: Service
     name: {{ include "minio.fullname" . }}

@@ -1,0 +1,23 @@
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  namespace: {{ .Release.namespace }}
+  name: {{ include "mastodon-streaming.fullname" . }}
+  labels:
+    {{- include "mastodon-streaming.labels" . | nindent 4 }}
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  host: {{ .Values.mastodon.local_domain }}
+  path: /api/v1/streaming
+  to:
+    kind: Service
+    name: {{ include "mastodon-streaming.fullname" . }}
+    weight: 100
+  port:
+    targetPort: mastodon-streaming
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  wildcardPolicy: None

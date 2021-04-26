@@ -42,8 +42,8 @@ mastodon:
   s3_bucket: mastodon
   s3_protocol: https
   s3_enabled: "true"
-  aws_access_key_id: minioadmin
-  aws_secret_access_key: minioadmin
+  aws_access_key_id: minio
+  aws_secret_access_key: minio123
   local_domain: mastodon.apps.hivec.sandbox879.opentlc.com
   vapid_public_key: BDJOQqRj-sORfK_9gsDZrtQQjNV45UbQ5KYw0BcLXIwp1pimyXKSqH5yYAqDqbALJXp4QoJbE-QPrpq99z15k-I=
   secret_key_base: =b4b3f46e7ea91922b05c2352b6b17e32f87611b85c1ba65d1219d44a1bbb172dbd416c35bfd32a83ae19f11d2f2c38689af7e2493d018aa939459ccd3c449d93
@@ -54,3 +54,7 @@ mastodon_web:
   service:
     port1: 3000
     port2: 4000
+
+mastodon_streaming:
+  service:
+    port1: 4000
