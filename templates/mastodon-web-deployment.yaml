@@ -20,6 +20,7 @@ spec:
       labels:
         {{- include "mastodon-web.labels" . | nindent 8 }}
     spec:
+      {{- if .Values.mastodon.init_db }}
       initContainers:
         - name: init
           image: {{ .Values.mastodon.image | quote }}
@@ -167,6 +168,7 @@ spec:
           volumeMounts:
             - mountPath: /opt/mastodon/tmp/
               name: mastodontemp
+      {{- end }}
       containers:
         - args:
             - bash

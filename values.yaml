@@ -54,6 +54,7 @@ mastodon:
   smtp_from_address: ""
   smtp_login: ""
   smtp_server: "smtp.mailgun.org"
+  init_db: true
 
 mastodon_web:
   service:
