@@ -3,13 +3,15 @@
 - https://joinmastodon.org/
 
 Deploy a mastodon instance in OpenShift
+
 ```bash
-helm upgrade --install foo .
+helm upgrade --install my-fediverse . --create-namespace --namespace mastodon
 ```
 
 A more detailed install example might be:
+
 ```bash
-helm upgrade --install foo --set mastodon.smtp_server=smtp.mailgun.org --set mastodon.smtp_login=postmaster@example.com --set mastodon.smtp_password=123456 --set mastodon.smtp_from_address=mastodon@example.com. .
+helm upgrade --install my-fediverse --set mastodon.smtp_server=smtp.mailgun.org --set mastodon.smtp_login=postmaster@example.com --set mastodon.smtp_password=123456 --set mastodon.smtp_from_address=mastodon@example.com. . --create-namespace --namespace mastodon
 ```
 
 ### Generate Secrets for your mastodon

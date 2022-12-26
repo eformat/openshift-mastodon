@@ -57,11 +57,6 @@ spec:
                 secretKeyRef:
                   key: {{ default "s3_enabled" }}
                   name: {{ include "mastodon.name" . }}
-            - name: S3_PROTOCOL
-              valueFrom:
-                secretKeyRef:
-                  key: {{ default "s3_protocol" }}
-                  name: {{ include "mastodon.name" . }}
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -175,7 +170,7 @@ spec:
             - -c
             - rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000
           command:
-            - /tini
+            - /usr/bin/tini
             - --
           name: mastodonweb
           env:
@@ -193,11 +188,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: {{ default "s3_hostname" }}
-                  name: {{ include "mastodon.name" . }}
-            - name: S3_PROTOCOL
-              valueFrom:
-                secretKeyRef:
-                  key: {{ default "s3_protocol" }}
                   name: {{ include "mastodon.name" . }}
             - name: S3_ENABLED
               valueFrom:

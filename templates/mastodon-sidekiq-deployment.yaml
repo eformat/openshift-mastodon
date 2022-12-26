@@ -26,7 +26,7 @@ spec:
             - exec
             - sidekiq
           command:
-            - /tini
+            - /usr/bin/tini
             - --
           name: mastodonstreaming
           env:
@@ -54,11 +54,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: {{ default "s3_enabled" }}
-                  name: {{ include "mastodon.name" . }}
-            - name: S3_PROTOCOL
-              valueFrom:
-                secretKeyRef:
-                  key: {{ default "s3_protocol" }}
                   name: {{ include "mastodon.name" . }}
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
