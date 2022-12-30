@@ -44,7 +44,7 @@ mastodon:
   s3_enabled: "true"
   aws_access_key_id: minio
   aws_secret_access_key: minio123
-  local_domain: mastodon.apps.foo-sno.sandbox1885.opentlc.com
+  local_domain: mastodon.apps.openshift.com
   vapid_public_key: BDJOQqRj-sORfK_9gsDZrtQQjNV45UbQ5KYw0BcLXIwp1pimyXKSqH5yYAqDqbALJXp4QoJbE-QPrpq99z15k-I=
   secret_key_base: =b4b3f46e7ea91922b05c2352b6b17e32f87611b85c1ba65d1219d44a1bbb172dbd416c35bfd32a83ae19f11d2f2c38689af7e2493d018aa939459ccd3c449d93
   vapid_private_key: Hyxd4kmRTD4D8dkDEh34_DanHjzd1ya6aHjNK4KsPww=

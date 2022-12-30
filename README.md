@@ -5,13 +5,19 @@
 Deploy a mastodon instance in OpenShift
 
 ```bash
-helm upgrade --install my-fediverse . --create-namespace --namespace mastodon
+helm upgrade --install my-fediverse . \
+  --create-namespace --namespace mastodon
 ```
 
 A more detailed install example might be:
 
 ```bash
-helm upgrade --install my-fediverse --set mastodon.smtp_server=smtp.mailgun.org --set mastodon.smtp_login=postmaster@example.com --set mastodon.smtp_password=123456 --set mastodon.smtp_from_address=mastodon@example.com. . --create-namespace --namespace mastodon
+helm upgrade --install my-fediverse . \
+  --set mastodon.smtp_server=smtp.mailgun.org \
+  --set mastodon.smtp_login=postmaster@example.com \
+  --set mastodon.smtp_password=123456 \
+  --set mastodon.smtp_from_address=mastodon@example.com. \
+  --create-namespace --namespace mastodon
 ```
 
 ### Generate Secrets for your mastodon
@@ -46,9 +52,8 @@ RAILS_ENV=production bin/tootctl accounts modify eformat --role Admin
 We want to make the s3 bucket non listable, but anonymous read-only access with the link, need to use aws cli:
 
 ```bash
-export AWS_PROFILE=minio
-aws --endpoint-url http://localhost:9000 s3api put-bucket-policy --bucket mastodon --policy file:///mastodon/policy.json
-
+oc -n mastodon port-forward svc/my-fediverse-minio 9000:9000
+cat << 'EOF' > /tmp/mastodon-policy.json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -69,4 +74,8 @@ aws --endpoint-url http://localhost:9000 s3api put-bucket-policy --bucket mastod
     }
   ]
 }
+EOF
+
+export AWS_PROFILE=minio
+aws --endpoint-url http://localhost:9000 s3api put-bucket-policy --bucket mastodon --policy file:///tmp/mastodon-policy.json
 ```
